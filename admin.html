@@ -79,6 +79,20 @@ function clearChats(){
   localStorage.removeItem("chatHistory");
   alert("Chats cleared");
 }
+  <script>
+function loadChats(){
+  const chats = JSON.parse(localStorage.getItem("chatHistory") || "[]");
+  document.getElementById("totalMsgs").innerText = chats.length;
+
+  let text = "";
+  chats.forEach((c, i) => {
+    text += (i+1) + ") " + c.cls.toUpperCase() + ": " + c.text + "\n\n";
+  });
+
+  document.getElementById("chatData").value =
+    text || "No chats yet";
+}
+</script>
 </script>
 
 </body>
