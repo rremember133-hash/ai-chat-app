@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Panel</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: Arial; background:#111; color:#fff; padding:20px }
+    input, textarea, button {
+      width:100%; margin:8px 0; padding:10px; border-radius:6px;
+      border:none; font-size:16px
+    }
+    button { background:#00c853; color:#000; font-weight:bold }
+    .box { background:#1c1c1c; padding:15px; border-radius:10px; margin-bottom:15px }
+  </style>
+</head>
+<body>
+
+<h2>🔐 Admin Login</h2>
+<input type="password" id="pass" placeholder="Admin Password">
+<button onclick="login()">Login</button>
+
+<div id="panel" style="display:none">
+
+  <div class="box">
+    <h3>🧠 System Prompt</h3>
+    <textarea id="prompt" rows="4"></textarea>
+    <button onclick="savePrompt()">Save Prompt</button>
+  </div>
+
+  <div class="box">
+    <h3>⚡ AI Status</h3>
+    <button onclick="toggleAI()">Toggle ON / OFF</button>
+    <p id="status"></p>
+  </div>
+
+  <div class="box">
+    <h3>🗑 Clear All Chats</h3>
+    <button onclick="clearChats()">Clear</button>
+  </div>
+
+</div>
+
+<script>
+const ADMIN_PASS = "1234"; // change later
+
+function login(){
+  if(document.getElementById("pass").value === ADMIN_PASS){
+    document.getElementById("panel").style.display="block";
+    loadData();
+  } else alert("Wrong password");
+}
+
+function loadData(){
+  document.getElementById("prompt").value =
+    localStorage.getItem("systemPrompt") || "You are a helpful AI";
+  document.getElementById("status").innerText =
+    localStorage.getItem("aiStatus") || "ON";
+}
+
+function savePrompt(){
+  localStorage.setItem("systemPrompt",
+    document.getElementById("prompt").value);
+  alert("Saved");
+}
+
+function toggleAI(){
+  let s = localStorage.getItem("aiStatus") === "OFF" ? "ON" : "OFF";
+  localStorage.setItem("aiStatus", s);
+  document.getElementById("status").innerText = s;
+}
+
+function clearChats(){
+  localStorage.removeItem("chatHistory");
+  alert("Chats cleared");
+}
+</script>
+
+</body>
+</html>
