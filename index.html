@@ -1,56 +1,6 @@
-<script>
-const chat = document.getElementById("chat");
-const input = document.getElementById("input");
-
-// Load existing chat
-let chatHistory = JSON.parse(localStorage.getItem("chatHistory") || "[]");
-chatHistory.forEach(m => addMsg(m.text, m.role));
-
-// AI status check
-function isAIOn() {
-  return (localStorage.getItem("aiStatus") || "ON") === "ON";
-}
-
-function getPrompt() {
-  return localStorage.getItem("systemPrompt") || "You are a helpful AI";
-}
-
-function addMsg(text, cls) {
-  const div = document.createElement("div");
-  div.className = "msg " + cls;
-  div.innerText = text;
-  chat.appendChild(div);
-  chat.scrollTop = chat.scrollHeight;
-}
-
-function saveMessage(role, text) {
-  chatHistory.push({
-    role,
-    text,
-    time: new Date().toLocaleString()
-  });
-  localStorage.setItem("chatHistory", JSON.stringify(chatHistory));
-}
-
-function send() {
-  if (!isAIOn()) {
-    alert("⚠️ AI is currently OFF by Admin");
-    return;
-  }
-
-  const text = input.value.trim();
-  if (!text) return;
-
-  addMsg(text, "user");
-  saveMessage("user", text);
-  input.value = "";
-
-  setTimeout(() => {
-    const reply =
-      "🤖 (" + getPrompt() + ")\n\nReply: " + text;
-
-    addMsg(reply, "bot");
-    saveMessage("bot", reply);
-  }, 700);
-}
-</script>
+<header>AI Chat Assistant</header>
+<div id="chat"></div>
+<footer>
+  <input id="input" placeholder="Type your message..." />
+  <button onclick="send()">Send</button>
+</footer>
