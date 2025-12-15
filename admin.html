@@ -1,59 +1,14 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Admin Panel</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    body { font-family: Arial; background:#111; color:#fff; padding:20px }
-    input, textarea, button {
-      width:100%; margin:8px 0; padding:10px; border-radius:6px;
-      border:none; font-size:16px
-    }
-    button { background:#00c853; color:#000; font-weight:bold }
-    .box { background:#1c1c1c; padding:15px; border-radius:10px; margin-bottom:15px }
-  </style>
-</head>
-<body>
-
-<h2>🔐 Admin Login</h2>
-<input type="password" id="pass" placeholder="Admin Password">
-<button onclick="login()">Login</button>
-
-<div id="panel" style="display:none">
-
-  <div class="box">
-    <h3>🧠 System Prompt</h3>
-    <textarea id="prompt" rows="4"></textarea>
-    <button onclick="savePrompt()">Save Prompt</button>
-  </div>
-
-  <div class="box">
-    <h3>⚡ AI Status</h3>
-    <button onclick="toggleAI()">Toggle ON / OFF</button>
-    <p id="status"></p>
-  </div>
-
-  <div class="box">
-    <h3>🗑 Clear All Chats</h3>
-    <button onclick="clearChats()">Clear</button>
-  </div>
-<div class="box">
-  <h3>📊 User Chat Data</h3>
-  <p>Total Messages: <b id="totalMsgs">0</b></p>
-  <textarea id="chatData" rows="10" readonly></textarea>
-  <button onclick="loadChats()">🔄 Refresh Chats</button>
-</div>
-  
-</div>
-const ADMIN_PASS = "1234";
 <script>
-const ADMIN_PASS = "1234"; // change later
+const ADMIN_PASS = "1234";
 
 function login(){
   if(document.getElementById("pass").value === ADMIN_PASS){
     document.getElementById("panel").style.display="block";
     loadData();
-  } else alert("Wrong password");
+    loadChats();
+  } else {
+    alert("Wrong password");
+  }
 }
 
 function loadData(){
@@ -79,21 +34,16 @@ function clearChats(){
   localStorage.removeItem("chatHistory");
   alert("Chats cleared");
 }
-  <script>
+
 function loadChats(){
   const chats = JSON.parse(localStorage.getItem("chatHistory") || "[]");
   document.getElementById("totalMsgs").innerText = chats.length;
 
   let text = "";
-  chats.forEach((c, i) => {
-    text += (i+1) + ") " + c.cls.toUpperCase() + ": " + c.text + "\n\n";
+  chats.forEach((c,i)=>{
+    text += (i+1)+") "+c.cls.toUpperCase()+": "+c.text+"\n\n";
   });
 
-  document.getElementById("chatData").value =
-    text || "No chats yet";
+  document.getElementById("chatData").value = text || "No chats yet";
 }
 </script>
-</script>
-
-</body>
-</html>
