@@ -1,19 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Panel</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { background:#111; color:#fff; font-family:Arial; padding:20px }
+    input, textarea, button {
+      width:100%; padding:10px; margin:6px 0;
+      border:none; border-radius:6px; font-size:16px
+    }
+    button { background:#22c55e; font-weight:bold }
+    .box { background:#1c1c1c; padding:15px; border-radius:10px; margin-bottom:15px }
+    textarea { height:200px }
+  </style>
+</head>
+<body>
+
+<h2>🔐 Admin Login</h2>
+<input type="password" id="pass" placeholder="Password">
+<button onclick="login()">Login</button>
+
+<div id="panel" style="display:none">
+
+  <div class="box">
+    <h3>📊 Total Messages</h3>
+    <p id="count">0</p>
+  </div>
+
+  <div class="box">
+    <h3>💬 All Chats</h3>
+    <textarea id="logs" readonly></textarea>
+  </div>
+
+  <div class="box">
+    <h3>🧠 System Prompt</h3>
+    <textarea id="prompt"></textarea>
+    <button onclick="savePrompt()">Save Prompt</button>
+  </div>
+
+  <div class="box">
+    <h3>⚡ AI Status</h3>
+    <button onclick="toggleAI()">ON / OFF</button>
+    <p id="status"></p>
+  </div>
+
+  <div class="box">
+    <button onclick="clearChats()">🗑 Clear Chats</button>
+  </div>
+
+</div>
+
 <script>
 const ADMIN_PASS = "1234";
 
 function login(){
-  if(document.getElementById("pass").value === ADMIN_PASS){
-    document.getElementById("panel").style.display="block";
+  const p = document.getElementById("pass").value;
+  if(p === ADMIN_PASS){
+    document.getElementById("panel").style.display = "block";
     loadData();
-    loadChats();
   } else {
     alert("Wrong password");
   }
 }
 
 function loadData(){
+  const chats = JSON.parse(localStorage.getItem("chatHistory") || "[]");
+  document.getElementById("count").innerText = chats.length;
+
+  let text = "";
+  chats.forEach((c,i)=>{
+    text += (i+1) + ") " + c.role + ": " + c.text + "\n\n";
+  });
+  document.getElementById("logs").value = text || "No chats yet";
+
   document.getElementById("prompt").value =
     localStorage.getItem("systemPrompt") || "You are a helpful AI";
+
   document.getElementById("status").innerText =
     localStorage.getItem("aiStatus") || "ON";
 }
@@ -21,7 +83,7 @@ function loadData(){
 function savePrompt(){
   localStorage.setItem("systemPrompt",
     document.getElementById("prompt").value);
-  alert("Saved");
+  alert("Prompt Saved");
 }
 
 function toggleAI(){
@@ -32,18 +94,10 @@ function toggleAI(){
 
 function clearChats(){
   localStorage.removeItem("chatHistory");
+  loadData();
   alert("Chats cleared");
 }
-
-function loadChats(){
-  const chats = JSON.parse(localStorage.getItem("chatHistory") || "[]");
-  document.getElementById("totalMsgs").innerText = chats.length;
-
-  let text = "";
-  chats.forEach((c,i)=>{
-    text += (i+1)+") "+c.cls.toUpperCase()+": "+c.text+"\n\n";
-  });
-
-  document.getElementById("chatData").value = text || "No chats yet";
-}
 </script>
+
+</body>
+</html>
