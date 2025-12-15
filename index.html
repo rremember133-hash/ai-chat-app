@@ -1,6 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AI Chat</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:#0f172a;
+  color:#fff;
+  display:flex;
+  flex-direction:column;
+  height:100vh;
+}
+header{
+  background:#020617;
+  padding:12px;
+  text-align:center;
+  font-weight:bold;
+}
+#chat{
+  flex:1;
+  padding:10px;
+  overflow-y:auto;
+}
+.msg{
+  margin:8px 0;
+  padding:10px;
+  border-radius:8px;
+  max-width:85%;
+  white-space:pre-wrap;
+}
+.user{background:#2563eb; margin-left:auto;}
+.bot{background:#334155;}
+footer{
+  display:flex;
+  padding:10px;
+  background:#020617;
+}
+input{
+  flex:1;
+  padding:10px;
+  border-radius:6px;
+  border:none;
+  outline:none;
+}
+button{
+  margin-left:8px;
+  padding:10px 16px;
+  border:none;
+  border-radius:6px;
+  background:#22c55e;
+  font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
 <header>AI Chat Assistant</header>
+
 <div id="chat"></div>
+
 <footer>
   <input id="input" placeholder="Type your message..." />
   <button onclick="send()">Send</button>
 </footer>
+
+<script>
+const chat = document.getElementById("chat");
+const input = document.getElementById("input");
+
+let chatHistory = JSON.parse(localStorage.getItem("chatHistory") || "[]");
+
+// Load old chats
+chatHistory.forEach(m => addMsg(m.text, m.role));
+
+function addMsg(text, role){
+  const div = document.createElement("div");
+  div.className = "msg " + role;
+  div.textContent = text;
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function send(){
+  const text = input.value.trim();
+  if(!text) return;
+
+  // AI ON/OFF check (from admin)
+  if(localStorage.getItem("aiStatus") === "OFF"){
+    alert("AI is OFF by Admin");
+    return;
+  }
+
+  input.value = "";
+
+  save("user", text);
+  addMsg(text, "user");
+
+  setTimeout(()=>{
+    const reply = "🤖 AI reply: " + text;
+    save("bot", reply);
+    addMsg(reply, "bot");
+  },700);
+}
+
+function save(role, text){
+  chatHistory.push({
+    role,
+    text,
+    time: new Date().toLocaleString()
+  });
+  localStorage.setItem("chatHistory", JSON.stringify(chatHistory));
+}
+</script>
+
+</body>
+</html>
