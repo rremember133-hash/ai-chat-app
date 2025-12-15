@@ -20,7 +20,11 @@
 <input type="password" id="pass" placeholder="Password">
 <button onclick="login()">Login</button>
 
-<div id="panel" style="display:none">
+<div id="panel" style="display:none"><div class="box">
+  <h3>📊 User Chats (Live)</h3>
+  <pre id="logs" style="white-space:pre-wrap"></pre>
+  <button onclick="loadChats()">Refresh</button>
+</div>
 
   <div class="box">
     <h3>📊 Total Messages</h3>
@@ -97,8 +101,21 @@ function clearChats(){
   loadData();
   alert("Chats cleared");
 }
+  function loadChats(){
+  const data =
+    JSON.parse(localStorage.getItem("chatHistory") || "[]");
+  let out = "";
+  data.forEach((m,i)=>{
+    out += (i+1)+". ["+m.time+"] "
+      +m.role.toUpperCase()+": "
+      +m.text+"\n\n";
+  });
+  document.getElementById("logs").innerText =
+    out || "No chats yet";
+  }
 </script>
-
+  
+}
 <script>
   console.log("Admin panel loaded v1.0");
 </script></body>
