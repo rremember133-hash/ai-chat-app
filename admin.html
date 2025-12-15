@@ -37,7 +37,13 @@
     <h3>🗑 Clear All Chats</h3>
     <button onclick="clearChats()">Clear</button>
   </div>
-
+<div class="box">
+  <h3>📊 User Chat Data</h3>
+  <p>Total Messages: <b id="totalMsgs">0</b></p>
+  <textarea id="chatData" rows="10" readonly></textarea>
+  <button onclick="loadChats()">🔄 Refresh Chats</button>
+</div>
+  
 </div>
 
 <script>
